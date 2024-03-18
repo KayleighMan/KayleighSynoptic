@@ -38,6 +38,8 @@ android {
 
 dependencies {
 
+    implementation ("androidx.recyclerview:recyclerview:1.3.2")
+    implementation ("com.google.android.material:material:1.11.0")
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-analytics")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")

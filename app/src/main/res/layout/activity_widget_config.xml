@@ -5,30 +5,11 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <RadioGroup
-        android:id="@+id/city_radio_group"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cities_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <RadioButton
-            android:id="@+id/radio_valletta"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Valletta" />
-
-        <RadioButton
-            android:id="@+id/radio_paris"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Paris" />
-
-        <RadioButton
-            android:id="@+id/radio_rome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rome" />
-    </RadioGroup>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/confirm_button"
