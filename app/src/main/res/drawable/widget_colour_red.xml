@@ -1,3 +1,3 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-  <solid android:color="#2874A6" />
+  <solid android:color="#E74C3C" /> <!-- Pink background -->
 </shape>

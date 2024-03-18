@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -26,6 +27,20 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Consider sending the FCM token to your server here
     }
 
+    private fun updateWidgetBackgroundToRed() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val thisWidget = ComponentName(this, WeatherWidgetProvider::class.java)
+        val allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget)
+
+        allWidgetIds.forEach { appWidgetId ->
+            val views = RemoteViews(packageName, R.layout.weather_widget).apply {
+                // Update the widget background to the red drawable
+                setInt(R.id.widget_root_layout, "setBackgroundResource", R.drawable.widget_colour_red)
+            }
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
+    }
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         remoteMessage.data.isNotEmpty().let {
             val title = remoteMessage.data["title"] ?: "Extreme Weather Alert"
@@ -33,6 +48,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             generateNotification(title, message)
             // If you have a specific action or data to handle, add it here
             updateWeatherWidget(title, message)
+
+            updateWidgetBackgroundToRed() //to change widget colour to red
         }
     }
 
