@@ -8,6 +8,5 @@ import retrofit2.http.Path
 interface WeatherApiService {
     @GET("api/v1/weather/{city}")
     suspend fun getWeather(@Path("city") city: String): Response<WeatherResponse>
-
 }
 
