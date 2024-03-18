@@ -31,7 +31,7 @@ class WeatherWidgetProvider : AppWidgetProvider() {
 
     private fun getCityPreference(context: Context, appWidgetId: Int): String {
         val prefs = context.getSharedPreferences("weatherWidget", Context.MODE_PRIVATE)
-        return prefs.getString("city_$appWidgetId", "Rome") ?: "Rome" // Default to Valletta if not found
+        return prefs.getString("city_$appWidgetId", "Valletta") ?: "Valletta" // Default to Valletta if not found
     }
 
     private fun updateWeatherData(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
@@ -73,6 +73,9 @@ class WeatherWidgetProvider : AppWidgetProvider() {
             setTextViewText(R.id.weather_temperature, "${weather.temp}°C")
             setTextViewText(R.id.weather_status, weather.condition)
         }
+
+        // Ensure to reapply the pink background here
+        views.setInt(R.id.widget_root_layout, "setBackgroundResource", R.drawable.widget_colour)
 
         // Tell the AppWidgetManager to perform an update on the current App Widget
         appWidgetManager.updateAppWidget(appWidgetId, views)

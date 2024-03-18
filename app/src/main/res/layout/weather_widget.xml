@@ -3,14 +3,16 @@
     android:id="@+id/widget_root_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:background="@drawable/widget_colour">
 
     <TextView
         android:id="@+id/weather_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Location"
-        android:textSize="24sp"/>
+        android:textSize="24sp"
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/weather_status"
@@ -18,7 +20,8 @@
         android:layout_height="wrap_content"
         android:text="Status"
         android:layout_below="@id/weather_location"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/weather_temperature"
@@ -26,6 +29,7 @@
         android:layout_height="wrap_content"
         android:text="Temperature"
         android:layout_below="@id/weather_status"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@android:color/black"/>
 
 </RelativeLayout>
