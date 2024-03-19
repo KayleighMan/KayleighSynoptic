@@ -1,6 +1,5 @@
 package com.example.kayleighsynoptic
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,91 +10,77 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-
-const val channelId = "weather_alerts_channel"
-const val channelName = "Weather Alerts"
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d("FCM Token", "Refreshed token: $token")
-        // Consider sending the FCM token to your server here
-    }
-
-    private fun updateWidgetBackgroundToRed() {
-        val appWidgetManager = AppWidgetManager.getInstance(this)
-        val thisWidget = ComponentName(this, WeatherWidgetProvider::class.java)
-        val allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget)
-
-        allWidgetIds.forEach { appWidgetId ->
-            val views = RemoteViews(packageName, R.layout.weather_widget).apply {
-                // Update the widget background to the red drawable
-                setInt(R.id.widget_root_layout, "setBackgroundResource", R.drawable.widget_colour_red)
-            }
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-        }
+        // Here you might want to send the token to your server
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         remoteMessage.data.isNotEmpty().let {
-            val title = remoteMessage.data["title"] ?: "Extreme Weather Alert"
-            val message = remoteMessage.data["message"] ?: "Please check the app for more details."
+            val title = remoteMessage.data["title"] ?: "Alert"
+            val message = remoteMessage.data["message"] ?: "Check your app for details."
             generateNotification(title, message)
-            // If you have a specific action or data to handle, add it here
-            updateWeatherWidget(title, message)
 
-            updateWidgetBackgroundToRed() //to change widget colour to red
-        }
-    }
-
-    @SuppressLint("RemoteViewLayout")
-    fun getRemoteView(title: String, message: String): RemoteViews {
-        val remoteView = RemoteViews(packageName, R.layout.weather_widget)
-        // Customize your widget layout with the alert
-        remoteView.setTextViewText(R.id.weather_status, title)
-        remoteView.setTextViewText(R.id.weather_temperature, message)
-        remoteView.setInt(R.id.widget_root_layout, "setBackgroundColor", Color.RED) // Assuming you have a background ID to set
-        return remoteView
-    }
-
-    fun generateNotification(title: String, message: String) {
-        val intent = Intent(this, WidgetConfigActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        }
-
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
-
-        var builder = NotificationCompat.Builder(applicationContext, channelId).apply {
-            setSmallIcon(R.drawable.notification)
-            setAutoCancel(true)
-            setContentIntent(pendingIntent)
-            setContent(getRemoteView(title, message))
-            priority = NotificationCompat.PRIORITY_HIGH
-        }
-
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH).apply {
-                description = "Channel for Extreme Weather Alerts"
+            // Assuming the message requires showing a warning on the widget
+            if (remoteMessage.data.containsKey("showWarning")) {
+                showWarningOnWidget(this, "WARNING: Extreme weather conditions!")
             }
-            notificationManager.createNotificationChannel(notificationChannel)
+        }
+    }
+
+    private fun generateNotification(title: String, message: String) {
+        val intent = Intent(this, WeatherWidgetProvider::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent,
+            PendingIntent.FLAG_IMMUTABLE)
+
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(CHANNEL_ID, "Weather Alerts", NotificationManager.IMPORTANCE_HIGH).apply {
+                description = "Channel description"
+            }
+            notificationManager.createNotificationChannel(channel)
         }
 
         notificationManager.notify(0, builder.build())
     }
 
-    private fun updateWeatherWidget(title: String, message: String) {
-        // Assuming WeatherWidgetProvider is the class handling your widget
-        val intent = Intent(this, WeatherWidgetProvider::class.java).apply {
-            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-            putExtra("widget_extra_title", title)
-            putExtra("widget_extra_message", message)
+    companion object {
+        private const val CHANNEL_ID = "weather_alerts_channel"
+
+        fun showWarningOnWidget(context: Context, warningText: String) {
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val thisWidget = ComponentName(context, WeatherWidgetProvider::class.java)
+            val allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget)
+
+            allWidgetIds.forEach { appWidgetId ->
+                val views = RemoteViews(context.packageName, R.layout.weather_widget).apply {
+                    setViewVisibility(R.id.widget_warning_text, View.VISIBLE)
+                    setTextViewText(R.id.widget_warning_text, warningText)
+                    setTextColor(R.id.widget_warning_text, Color.RED) // Optional: Set text color
+                }
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
         }
-        sendBroadcast(intent)
     }
 }
