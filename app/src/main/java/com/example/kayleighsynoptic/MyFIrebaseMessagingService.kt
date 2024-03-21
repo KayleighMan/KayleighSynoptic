@@ -21,7 +21,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d("FCM Token", "Refreshed token: $token")
-        // Here you might want to send the token to your server
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -77,7 +76,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 val views = RemoteViews(context.packageName, R.layout.weather_widget).apply {
                     setViewVisibility(R.id.widget_warning_text, View.VISIBLE)
                     setTextViewText(R.id.widget_warning_text, warningText)
-                    setTextColor(R.id.widget_warning_text, Color.RED) // Optional: Set text color
+                    setTextColor(R.id.widget_warning_text, Color.RED)
                 }
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             }

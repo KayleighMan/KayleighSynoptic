@@ -3,7 +3,6 @@ package com.example.kayleighsynoptic
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-// RetrofitInstance.kt
 object RetrofitInstance {
     private const val BASE_URL = "https://api.jamesdecelis.com/"
 

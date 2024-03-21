@@ -22,8 +22,6 @@ class WidgetConfigActivity : AppCompatActivity() {
         val cities = listOf("Valletta", "Paris", "Rome")
         val citiesRecyclerView: RecyclerView = findViewById(R.id.cities_recycler_view)
         citiesRecyclerView.layoutManager = LinearLayoutManager(this)
-
-        // Initialize selectedCity with a default or previously saved value
         selectedCity = cities[0]
 
         citiesRecyclerView.adapter = CitiesAdapter(cities, selectedCity) { city ->
@@ -32,7 +30,6 @@ class WidgetConfigActivity : AppCompatActivity() {
 
         val confirmButton: Button = findViewById(R.id.confirm_button)
         confirmButton.setOnClickListener {
-            // Here, selectedCity holds the selected city
             val appWidgetId = intent.extras?.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID) ?: AppWidgetManager.INVALID_APPWIDGET_ID
             saveCityPreference(this, appWidgetId, selectedCity)
 

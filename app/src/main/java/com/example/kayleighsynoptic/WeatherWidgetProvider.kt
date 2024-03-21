@@ -67,17 +67,13 @@ class WeatherWidgetProvider : AppWidgetProvider() {
         appWidgetId: Int,
         weather: WeatherResponse
     ) {
-        // Construct the RemoteViews object. It's a layout for the App Widget.
         val views = RemoteViews(context.packageName, R.layout.weather_widget).apply {
             setTextViewText(R.id.weather_location, weather.name)
             setTextViewText(R.id.weather_temperature, "${weather.temp}°C")
             setTextViewText(R.id.weather_status, weather.condition)
         }
 
-        // Ensure to reapply the pink background here
         views.setInt(R.id.widget_root_layout, "setBackgroundResource", R.drawable.widget_colour)
-
-        // Tell the AppWidgetManager to perform an update on the current App Widget
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 }
