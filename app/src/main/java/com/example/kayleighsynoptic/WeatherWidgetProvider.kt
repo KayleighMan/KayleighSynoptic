@@ -16,6 +16,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 
+//-------------------github link--------------------
+//https://github.com/KayleighMan/KayleighSynoptic
+
 class WeatherWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(
